@@ -1,0 +1,4 @@
+PotentionalImageDetection
+=========================
+
+Метод потенциалов
