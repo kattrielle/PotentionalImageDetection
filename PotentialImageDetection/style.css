@@ -1,0 +1,15 @@
+/* 
+    Document   : style
+    Created on : 27.11.2012, 20:22:55
+    Author     : kate
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.drawing-area {
+    width: 150;
+    height: 200;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+}
