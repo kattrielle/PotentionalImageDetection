@@ -2,13 +2,26 @@ $(document).ready(function() {
     var imageField = document.getElementById("picture");
     var ctx = imageField.getContext('2d');
     
-    $("#picture").mousedown(MouseDrawStart);
-    $("#picture").mousemove(MouseDraw);
-    $(document).mouseup(MouseDrawEnd);
-    $("#clearButton").click(ClearDrawingArea);
-    $("#addButton").click();
+    $("#picture").mousedown( MouseDrawStart );
+    $("#picture").mousemove( MouseDraw );
+    $(document).mouseup( MouseDrawEnd );
+    $("#clearButton").click( ClearDrawingArea );
+    $("#addButton").click( AddExample );
+    $("#recognizeButton").click( );
     
     var MouseFlag = false;
+    var classes = [];
+    
+    function AddExample( event )
+    {
+        var currentClass = $("#classNameInput").text();
+        if ( classes[currentClass] != undefined ) {
+            var classExamples = classes[currentClass];
+        } else classExamples = [];
+        classExamples.push( MakingPixelMap );
+        classes[currentClass] = classExamples;
+        console.log( classes );
+    }
     
     function MouseDrawStart( event )
     {
@@ -57,5 +70,24 @@ $(document).ready(function() {
             }
                 
         }
+        console.log( map );
+        return( map );
+    }
+    
+    function ImprovingPixelMap( map )
+    {
+        var improvedMap = map;
+        for (var i=0; i<imageField.height; i++)
+            for (var j=0; j<imageField.width; j++) {
+                if (map[i-1][j-1] == 1) improvedMap += 0.5;
+                if (map[i-1][j] == 1) improvedMap += 0.5;
+                if (map[i-1][j+1] == 1) improvedMap += 0.5;
+                if (map[i][j-1] == 1) improvedMap += 0.5;
+                if (map[i][j+1] == 1) improvedMap += 0.5;
+                if (map[i+1][j-1] == 1) improvedMap += 0.5;
+                if (map[i+1][j] == 1) improvedMap += 0.5;
+                if (map[i+1][j+1] == 1) improvedMap += 0.5;
+            }
+        return( improvedMap );
     }
 });
