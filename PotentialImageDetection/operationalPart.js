@@ -7,18 +7,57 @@ $(document).ready(function() {
     $(document).mouseup( MouseDrawEnd );
     $("#clearButton").click( ClearDrawingArea );
     $("#addButton").click( AddExample );
-    $("#recognizeButton").click( );
+    $("#recognizeButton").click( CompareDistances );
+    $("#resetButton").click( ResetEducation );
     
     var MouseFlag = false;
     var classes = [];
     
-    function AddExample( event )
+    ClearDrawingArea();
+    
+    function CompareDistances()
     {
-        var currentClass = $("#classNameInput").text();
+        var minDistance = 0;
+        var closestClass;
+        var recognizingMap = MakingPixelMap();
+        $.each(classes, CountDistanceToClass );
+    }
+    
+    function countDistanceToClass( index, value )
+    {
+        var averageDistance = 0;
+        for ( var i=0; i<value.length; i++ ) {
+            averageDistance += EuclideanDistance( recognizingMap, value[i] );
+        }
+        averageDistance /= value.length;
+        if ( (closestClass == undefined) || (averageDistance < minDistance) ) {
+            closestClass = index;
+            minDistance = averageDistance;
+        }
+    }
+    
+    function EuclideanDistance( map1, map2 )
+    {
+        var sum = 0;
+        for( var i=0; i<imageField.height; i++)
+            for( var j=0; j<imageField.width; j++) {
+                sum+= math.pow(map1[i][j]-map2[i][j], 2);
+            }
+        return sqrt(sum);
+    }
+    
+    function ResetEducation( )
+    {
+        classes = [];
+    }
+    
+    function AddExample( )
+    {
+        var currentClass = $("#classNameInput").val();
         if ( classes[currentClass] != undefined ) {
             var classExamples = classes[currentClass];
         } else classExamples = [];
-        classExamples.push( MakingPixelMap );
+        classExamples.push( MakingPixelMap() );
         classes[currentClass] = classExamples;
         console.log( classes );
     }
@@ -26,14 +65,13 @@ $(document).ready(function() {
     function MouseDrawStart( event )
     {
         MouseFlag = true;
-        ctx.fillRect(event.offsetX, event.offsetY, 5, 5)
-        
+        ctx.fillRect(event.offsetX, event.offsetY, 5, 5);
     }
     
     function MouseDraw( event )
     {
         if (MouseFlag) {
-            ctx.fillRect(event.offsetX, event.offsetY, 5, 5)
+            ctx.fillRect(event.offsetX, event.offsetY, 5, 5);
         }
     }
     
@@ -53,11 +91,10 @@ $(document).ready(function() {
     {
         var map = [];
         var row = [];
-        var pixelMap = ctx.getImageData(0, 0, imageField.width, imageField.height);
+        var pixelMap = ctx.getImageData(0, 0, imageField.width, imageField.height).data;
         var w=0, h=0;
-        for (var i=0; i < ctx.data.length; i+=4) {
-            if (pixelMap[i] == 255 && pixelMap[i+1] == 255 && pixelMap[i+2] == 255) {
-                
+        for (var i=0; i < pixelMap.length; i+=4) {
+            if (pixelMap[i] == 255 && pixelMap[i+1] == 255 && pixelMap[i+2] == 255) { 
                 row.push(0);
             } else {
                 row.push(1);
@@ -67,11 +104,12 @@ $(document).ready(function() {
                 h++;
                 w=0;
                 map.push(row);
+                row = [];
             }
                 
         }
         console.log( map );
-        return( map );
+        return map;
     }
     
     function ImprovingPixelMap( map )
@@ -88,6 +126,6 @@ $(document).ready(function() {
                 if (map[i+1][j] == 1) improvedMap += 0.5;
                 if (map[i+1][j+1] == 1) improvedMap += 0.5;
             }
-        return( improvedMap );
+        return improvedMap;
     }
 });
