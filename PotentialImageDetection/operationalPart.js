@@ -11,7 +11,7 @@ $(document).ready(function() {
     $("#resetButton").click( ResetEducation );
     
     var MouseFlag = false;
-    var classes = [];
+    var classes = {};
     
     ClearDrawingArea();
     
@@ -32,7 +32,8 @@ $(document).ready(function() {
                 minDistance = averageDistance;
             }
         } );
-        
+        $(".modal-body").text("Ближайший класс: " + closestClass);
+        $("#modalClassify").modal('show');
     }
     
     function EuclideanDistance( map1, map2 )
@@ -40,14 +41,16 @@ $(document).ready(function() {
         var sum = 0;
         for( var i=0; i<imageField.height; i++)
             for( var j=0; j<imageField.width; j++) {
-                sum+= math.pow(map1[i][j]-map2[i][j], 2);
+                sum+= Math.pow(map1[i][j]-map2[i][j], 2);
             }
-        return sqrt(sum);
+        return Math.sqrt(sum);
     }
     
     function ResetEducation( )
     {
-        classes = [];
+        classes = {};
+        ClearDrawingArea();
+        $("#classNameInput").val("");
     }
     
     function AddExample( )
@@ -58,8 +61,8 @@ $(document).ready(function() {
         } else classExamples = [];
         classExamples.push( MakingPixelMap() );
         classes[currentClass] = classExamples;
+        $("#classNameInput").val("");
         ClearDrawingArea();
-        console.log( classes );
     }
     
     function MouseDrawStart( event )
@@ -108,32 +111,36 @@ $(document).ready(function() {
             }
                 
         }
-        console.log( map );
+        if ($("#methodType2").attr('checked') != undefined ) {
+            map = ImprovingPixelMap(map);
+        }
         return map;
     }
     
     function ImprovingPixelMap( map )
     {
         var improvedMap = map;
-        for (var i=0; i<imageField.height; i++)
-            for (var j=0; j<imageField.width; j++) {
-                if (map[i-1][j-1] != undefined && (map[i-1][j-1] == 1) )
+        for (var i=1; i<imageField.height-1; i++)
+            for (var j=1; j<imageField.width-1; j++) {
+                if (map[i-1][j-1] == 1) 
                     improvedMap += 0.5;
-                if (map[i-1][j] != undefined && map[i-1][j] == 1) 
+                if (map[i-1][j] == 1) 
                     improvedMap += 0.5;
-                if (map[i-1][j+1] != undefined && map[i-1][j+1] == 1) 
+                if (map[i-1][j+1] == 1) 
                     improvedMap += 0.5;
-                if (map[i][j-1] != undefined && map[i][j-1] == 1) 
+                if (map[i][j-1] == 1) 
                     improvedMap += 0.5;
-                if (map[i][j+1] != undefined && map[i][j+1] == 1) 
+                if (map[i][j+1] == 1) 
                     improvedMap += 0.5;
-                if (map[i+1][j-1] != undefined && map[i+1][j-1] == 1) 
+                if (map[i+1][j-1] == 1) 
                     improvedMap += 0.5;
-                if (map[i+1][j] != undefined && map[i+1][j] == 1) 
+                if (map[i+1][j] == 1) 
                     improvedMap += 0.5;
-                if (map[i+1][j+1] != undefined && map[i+1][j+1] == 1) 
+                if (map[i+1][j+1] == 1) 
                     improvedMap += 0.5;
             }
+        
+        
         return improvedMap;
     }
 });
