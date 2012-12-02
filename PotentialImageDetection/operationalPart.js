@@ -20,20 +20,19 @@ $(document).ready(function() {
         var minDistance = 0;
         var closestClass;
         var recognizingMap = MakingPixelMap();
-        $.each(classes, CountDistanceToClass );
-    }
-    
-    function countDistanceToClass( index, value )
-    {
-        var averageDistance = 0;
-        for ( var i=0; i<value.length; i++ ) {
-            averageDistance += EuclideanDistance( recognizingMap, value[i] );
-        }
-        averageDistance /= value.length;
-        if ( (closestClass == undefined) || (averageDistance < minDistance) ) {
-            closestClass = index;
-            minDistance = averageDistance;
-        }
+        $.each(classes, function( index, value )
+        {
+            var averageDistance = 0;
+            for ( var i=0; i<value.length; i++ ) {
+                averageDistance += EuclideanDistance( recognizingMap, value[i] );
+            }
+            averageDistance /= value.length;
+            if ( (closestClass == undefined) || (averageDistance < minDistance) ) {
+                closestClass = index;
+                minDistance = averageDistance;
+            }
+        } );
+        
     }
     
     function EuclideanDistance( map1, map2 )
@@ -59,6 +58,7 @@ $(document).ready(function() {
         } else classExamples = [];
         classExamples.push( MakingPixelMap() );
         classes[currentClass] = classExamples;
+        ClearDrawingArea();
         console.log( classes );
     }
     
@@ -117,14 +117,22 @@ $(document).ready(function() {
         var improvedMap = map;
         for (var i=0; i<imageField.height; i++)
             for (var j=0; j<imageField.width; j++) {
-                if (map[i-1][j-1] == 1) improvedMap += 0.5;
-                if (map[i-1][j] == 1) improvedMap += 0.5;
-                if (map[i-1][j+1] == 1) improvedMap += 0.5;
-                if (map[i][j-1] == 1) improvedMap += 0.5;
-                if (map[i][j+1] == 1) improvedMap += 0.5;
-                if (map[i+1][j-1] == 1) improvedMap += 0.5;
-                if (map[i+1][j] == 1) improvedMap += 0.5;
-                if (map[i+1][j+1] == 1) improvedMap += 0.5;
+                if (map[i-1][j-1] != undefined && (map[i-1][j-1] == 1) )
+                    improvedMap += 0.5;
+                if (map[i-1][j] != undefined && map[i-1][j] == 1) 
+                    improvedMap += 0.5;
+                if (map[i-1][j+1] != undefined && map[i-1][j+1] == 1) 
+                    improvedMap += 0.5;
+                if (map[i][j-1] != undefined && map[i][j-1] == 1) 
+                    improvedMap += 0.5;
+                if (map[i][j+1] != undefined && map[i][j+1] == 1) 
+                    improvedMap += 0.5;
+                if (map[i+1][j-1] != undefined && map[i+1][j-1] == 1) 
+                    improvedMap += 0.5;
+                if (map[i+1][j] != undefined && map[i+1][j] == 1) 
+                    improvedMap += 0.5;
+                if (map[i+1][j+1] != undefined && map[i+1][j+1] == 1) 
+                    improvedMap += 0.5;
             }
         return improvedMap;
     }
