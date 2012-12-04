@@ -122,25 +122,35 @@ $(document).ready(function() {
         var improvedMap = map;
         for (var i=1; i<imageField.height-1; i++)
             for (var j=1; j<imageField.width-1; j++) {
-                if (map[i-1][j-1] == 1) 
-                    improvedMap += 0.5;
-                if (map[i-1][j] == 1) 
-                    improvedMap += 0.5;
-                if (map[i-1][j+1] == 1) 
-                    improvedMap += 0.5;
-                if (map[i][j-1] == 1) 
-                    improvedMap += 0.5;
-                if (map[i][j+1] == 1) 
-                    improvedMap += 0.5;
-                if (map[i+1][j-1] == 1) 
-                    improvedMap += 0.5;
-                if (map[i+1][j] == 1) 
-                    improvedMap += 0.5;
-                if (map[i+1][j+1] == 1) 
-                    improvedMap += 0.5;
-            }
-        
-        
+                if (map[i + 1] != undefined) {
+                    if (map[i + 1][j-1] != undefined) {
+                        improvedMap[i][j] += map[i + 1][j-1] * 0.5;
+                    }
+                    if (map[i + 1][j] != undefined) {
+                        improvedMap[i][j] += map[i + 1][j] * 0.5;
+                    }
+                    if (map[i + 1][j + 1] != undefined) {
+                        improvedMap[i][j] += map[i + 1][j + 1] * 0.5;
+                    }
+                }
+                if (map[i - 1] != undefined) {
+                    if (map[i - 1][j - 1] != undefined) {
+                        improvedMap[i][j] += map[i - 1][j - 1] * 0.5;
+                    }
+                    if (map[i - 1][j] != undefined) {
+                        improvedMap[i][j] += map[i - 1][j] * 0.5;
+                    }
+                    if (map[i - 1][j + 1] != undefined) {
+                        improvedMap[i][j] += map[i - 1][j + 1] * 0.5;
+                    }
+                }
+                if (map[i][j - 1] != undefined) {
+                    improvedMap[i][j] += map[i][j - 1] * 0.5;
+                }
+                if (map[i][j + 1] != undefined) {
+                    improvedMap[i][j] += map[i][j + 1] * 0.5;
+                }
+            } 
         return improvedMap;
     }
 });
